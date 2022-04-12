@@ -76,7 +76,6 @@ public class Portal : MonoBehaviour
             {
                 traveller.previousOffsetFromPortal = offsetFromPortal;
             }
-            
         }
     }
 
@@ -116,8 +115,27 @@ public class Portal : MonoBehaviour
         Matrix4x4 m = transform.localToWorldMatrix * linkedPortal.transform.worldToLocalMatrix * playerCam.transform.localToWorldMatrix;
         portalCam.transform.SetPositionAndRotation(m.GetColumn(3), m.rotation);
 
+        SetNearClipPlane();
         portalCam.Render();
         portalDoor.enabled = true;
+    }
+
+    void SetNearClipPlane()
+    {
+        //Transform clipPlane = transform;
+        //int dot = System.Math.Sign(Vector3.Dot(clipPlane.forward, transform.position - portalCam.transform.position));
+        //Vector3 camSpacePos = portalCam.worldToCameraMatrix.MultiplyPoint(clipPlane.position);
+        //Vector3 camSpaceNormal = portalCam.worldToCameraMatrix.MultiplyVector(clipPlane.forward) * dot;
+        //float camSpaceDst = -Vector3.Dot(camSpacePos, camSpaceNormal);
+        //Vector4 clipPlaneCameraSpace = new Vector4(camSpaceNormal.x, camSpaceNormal.y, camSpaceNormal.z, camSpaceDst + 0.4f);
+
+        Plane p = new Plane(transform.forward, transform.position);
+        Vector4 clipPlaneWorldSpace = new Vector4(p.normal.x, p.normal.y, p.normal.z, p.distance + 0.4f);
+        Vector4 clipPlaneCameraSpace = Matrix4x4.Transpose(Matrix4x4.Inverse(portalCam.worldToCameraMatrix)) * clipPlaneWorldSpace;
+
+
+        portalCam.projectionMatrix = playerCam.CalculateObliqueMatrix(clipPlaneCameraSpace);
+       // portalCam.transform.position = new Vector3(portalCam.transform.position.x, portalCam.transform.position.y, portalCam.transform.position.z + 1.0f);
     }
 
     void OnTravellerEnterPortal(PortalTraveller traveller)

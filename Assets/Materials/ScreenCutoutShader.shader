@@ -4,57 +4,63 @@ Shader "Unlit/ScreenCutoutShader"
 {
 	Properties
 	{
-		_MainTex ("Texture", 2D) = "white" {}
+		_MainTex("Texture", 2D) = "white" {}
 	}
-	SubShader
+		SubShader
 	{
-		Tags{ "Queue" = "Transparent" "IgnoreProjector" = "True" "RenderType" = "Transparent" }
-		Lighting Off
-		Cull Back
-		ZWrite On
-		ZTest Less
-		
-		Fog{ Mode Off }
+		Tags
+		{
+			"RenderType" = "Opaque"
+			"Queue" = "Geometry"
+			"RenderPipeline" = "UniversalPipeline"
+			//"IgnoreProjector" = "True"
+		}
+		//Lighting Off
+		Cull Off
+		//ZWrite On
+		//ZTest Less
+
+		//Fog{ Mode Off }
+
+		HLSLINCLUDE
+#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+		ENDHLSL
 
 		Pass
 		{
-			CGPROGRAM
+			HLSLPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
-			
-			#include "UnityCG.cginc"
 
 			struct appdata
 			{
 				float4 vertex : POSITION;
-				float2 uv : TEXCOORD0;
 			};
 
 			struct v2f
 			{
-				//float2 uv : TEXCOORD0;
 				float4 vertex : SV_POSITION;
-				float4 screenPos : TEXCOORD1;
+				float4 screenPos : TEXCOORD0;
 			};
 
-			v2f vert (appdata v)
+			v2f vert(appdata v)
 			{
 				v2f o;
-				o.vertex = UnityObjectToClipPos(v.vertex);
+				o.vertex = TransformObjectToHClip(v.vertex.xyz);
+				//o.vertex = TransformObjectToHClip(v.vertex.xyz);
 				o.screenPos = ComputeScreenPos(o.vertex);
 				return o;
 			}
-			
+
 			sampler2D _MainTex;
 
-			fixed4 frag (v2f i) : SV_Target
+			float4 frag(v2f i) : SV_Target
 			{
-				float2 screenSpaceUV = i.screenPos.xy /= i.screenPos.w;
-				fixed4 col = tex2D(_MainTex, screenSpaceUV);
-				
+				float2 screenSpaceUV = i.screenPos.xy / i.screenPos.w;
+				float4 col = tex2D(_MainTex, screenSpaceUV);
 				return col;
 			}
-			ENDCG
+			ENDHLSL
 		}
 	}
 }
