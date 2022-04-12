@@ -6,7 +6,7 @@ Shader "Unlit/ScreenCutoutShader"
 	{
 		_MainTex("Texture", 2D) = "white" {}
 	}
-		SubShader
+	SubShader
 	{
 		Tags
 		{
@@ -15,10 +15,6 @@ Shader "Unlit/ScreenCutoutShader"
 			"RenderPipeline" = "UniversalPipeline"
 			//"IgnoreProjector" = "True"
 		}
-		//Lighting Off
-		Cull Off
-		//ZWrite On
-		//ZTest Less
 
 		//Fog{ Mode Off }
 
@@ -28,6 +24,11 @@ Shader "Unlit/ScreenCutoutShader"
 
 		Pass
 		{
+			Lighting Off
+			Cull Off
+			ZWrite On
+			ZTest Less
+
 			HLSLPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
