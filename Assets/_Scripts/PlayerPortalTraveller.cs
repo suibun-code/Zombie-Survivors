@@ -9,8 +9,15 @@ public class PlayerPortalTraveller : PortalTraveller
 
     public override void Teleport(Transform fromPortal, Transform toPortal, Vector3 pos, Quaternion rot)
     {
+        //Calculate angle difference between portals to rotate camera
+        var forwardA = transform.rotation * Vector3.forward;
+        var forwardB = rot * Vector3.forward;
+        var angleA = Mathf.Atan2(forwardA.x, forwardA.z) * Mathf.Rad2Deg;
+        var angleB = Mathf.Atan2(forwardB.x, forwardB.z) * Mathf.Rad2Deg;
+        var angleDiff = Mathf.DeltaAngle(angleA, angleB);
+
         base.Teleport(fromPortal, toPortal, pos, rot);
 
-        cameraFollowTarget.transform.rotation = rot;
+        GetComponent<ThirdPersonController>().CameraYawOverride = angleDiff;
     }
 }

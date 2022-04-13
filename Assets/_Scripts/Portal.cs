@@ -41,7 +41,7 @@ public class Portal : MonoBehaviour
         if (PortalReset.leftTriggerZone)
         {
             playerTravelled = false;
-            //portalDoor.enabled = true;
+            portalDoor.enabled = true;
             linkedPortal.portalDoor.enabled = true;
             PortalReset.leftTriggerZone = false;
         }
