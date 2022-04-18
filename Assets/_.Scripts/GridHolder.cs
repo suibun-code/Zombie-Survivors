@@ -20,13 +20,10 @@ public class GridHolder : Singleton<GridHolder>
     {
         base.Awake();
 
-        MakeAllNodesArray();
-    }
-
-    private void Start()
-    {
         boardManagers = new List<BoardManager>(managerCount);
         highlightedNodes = new List<PathNode>();
+
+        MakeAllNodesArray();
     }
 
     private void Update()

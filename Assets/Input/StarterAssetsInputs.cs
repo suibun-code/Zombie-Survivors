@@ -18,6 +18,7 @@ public class StarterAssetsInputs : MonoBehaviour
     public bool sprint;
     public bool aim;
     public bool shoot;
+    public bool buildMode;
 
     [Header("Movement Settings")]
     public bool analogMovement;
@@ -68,6 +69,14 @@ public class StarterAssetsInputs : MonoBehaviour
         ShootInput(value.isPressed);
     }
 
+    public void OnBuildMode(InputValue value)
+    {
+        if (value.isPressed)
+        {
+            BuildModeInput();
+        }
+    }
+
     public void MoveInput(Vector2 newMoveDirection)
     {
         move = newMoveDirection;
@@ -96,6 +105,14 @@ public class StarterAssetsInputs : MonoBehaviour
     public void ShootInput(bool newShootState)
     {
         shoot = newShootState;
+    }
+
+    public void BuildModeInput()
+    {
+        if (buildMode)
+            buildMode = false;
+        else
+            buildMode = true;
     }
 
     private void OnApplicationFocus(bool hasFocus)

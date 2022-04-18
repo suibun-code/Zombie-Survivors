@@ -329,7 +329,7 @@ public class ThirdPersonController : MonoBehaviour
 
     public void OnInteract(InputValue value)
     {
-        if (value.isPressed)
+        if (value.isPressed && _input.buildMode)
         {
             ObstacleManager.instance.SpawnObstacle(_input.screenMidRaycast.x, _input.screenMidRaycast.z);
         }

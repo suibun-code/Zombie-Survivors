@@ -13,12 +13,10 @@ public class ObstacleManager : Singleton<ObstacleManager>
         if (GridDisplay.display == false)
             return;
 
-        //if player has no money, cant buy HERE
-
         //if the trap location is out of range of the grid array then return
-        if (GridHolder.instance.allNodes.GetLength(0) <= posX || 
-            GridHolder.instance.allNodes.GetLength(1) <= posZ || 
-            posX < 0 || 
+        if (GridHolder.instance.allNodes.GetLength(0) <= posX ||
+            GridHolder.instance.allNodes.GetLength(1) <= posZ ||
+            posX < 0 ||
             posZ < 0)
         {
             return;
@@ -37,8 +35,11 @@ public class ObstacleManager : Singleton<ObstacleManager>
             return;
 
         //spawn obstacle
+        if (!PlayerStats.SubtractMoney(25))
+            return;
+
         GameObject obstacle = Instantiate(obstaclePrefab, transform);
-        obstacle.transform.position = new Vector3(posX + 0.5f, obstacle.transform.position.y, posZ + 0.5f);
+        obstacle.transform.position = new Vector3(posX + 0.5f, obstacle.transform.position.y + 0.25f, posZ + 0.5f);
         GridHolder.instance.allNodes[posX, posZ].SetHasObstacle(true);
         GridHolder.instance.allNodes[posX, posZ].cell.ResetCellColor();
 

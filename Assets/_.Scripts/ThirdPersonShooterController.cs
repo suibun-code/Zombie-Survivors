@@ -7,6 +7,8 @@ public class ThirdPersonShooterController : MonoBehaviour
 {
     [SerializeField] private Camera mainCam;
 
+    [SerializeField] private GameObject gridHolder;
+
     [SerializeField] private CinemachineVirtualCamera aimVirtualCamera;
     [SerializeField] private float normalSensitivity;
     [SerializeField] private float aimSensitivity;
@@ -29,30 +31,39 @@ public class ThirdPersonShooterController : MonoBehaviour
     {
         SetCenterPoint();
 
-        if (_input.aim)
+        if (_input.buildMode)
         {
-            aimVirtualCamera.gameObject.SetActive(true);
-            thirdPersonController.SetSensitivity(aimSensitivity);
-            thirdPersonController.SetRotateOnMove(false);
-
-            Vector3 worldAimTarget = mouseWorldPosition;
-            worldAimTarget.y = transform.position.y;
-            Vector3 aimDirection = (worldAimTarget - transform.position).normalized;
-
-            transform.forward = Vector3.Lerp(transform.forward, aimDirection, Time.deltaTime * 20f);
+            gridHolder.SetActive(true);
         }
         else
         {
-            aimVirtualCamera.gameObject.SetActive(false);
-            thirdPersonController.SetSensitivity(normalSensitivity);
-            thirdPersonController.SetRotateOnMove(true);
-        }
+            gridHolder.SetActive(false);
 
-        if (_input.shoot)
-        {
-            Vector3 aimDir = (mouseWorldPosition - spawnBulletTransform.position).normalized;
-            Instantiate(bulletTransform, spawnBulletTransform.position, Quaternion.LookRotation(aimDir, Vector3.up));
-            _input.shoot = false;
+            if (_input.aim)
+            {
+                aimVirtualCamera.gameObject.SetActive(true);
+                thirdPersonController.SetSensitivity(aimSensitivity);
+                thirdPersonController.SetRotateOnMove(false);
+
+                Vector3 worldAimTarget = mouseWorldPosition;
+                worldAimTarget.y = transform.position.y;
+                Vector3 aimDirection = (worldAimTarget - transform.position).normalized;
+
+                transform.forward = Vector3.Lerp(transform.forward, aimDirection, Time.deltaTime * 20f);
+            }
+            else
+            {
+                aimVirtualCamera.gameObject.SetActive(false);
+                thirdPersonController.SetSensitivity(normalSensitivity);
+                thirdPersonController.SetRotateOnMove(true);
+            }
+
+            if (_input.shoot)
+            {
+                Vector3 aimDir = (mouseWorldPosition - spawnBulletTransform.position).normalized;
+                Instantiate(bulletTransform, spawnBulletTransform.position, Quaternion.LookRotation(aimDir, Vector3.up));
+                _input.shoot = false;
+            }
         }
     }
 
