@@ -17,6 +17,9 @@ public class ThirdPersonShooterController : MonoBehaviour
     [SerializeField] private Transform bulletTransform;
     [SerializeField] private Transform spawnBulletTransform;
 
+    [SerializeField] public bool isReloading;
+    [SerializeField] public bool isFiring;
+
     private Vector3 mouseWorldPosition;
     private ThirdPersonController thirdPersonController;
     private StarterAssetsInputs _input;
