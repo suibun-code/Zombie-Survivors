@@ -33,6 +33,7 @@ public struct WeaponStats
 
 public class Weapon : MonoBehaviour
 {
+    public Transform muzzleSocket;
     public Transform gripLocation;
     public WeaponStats weaponStats;
     protected WeaponHolder weaponHolder;
@@ -84,9 +85,10 @@ public class Weapon : MonoBehaviour
 
     protected virtual void FireWeapon()
     {
-        print("Firing weapon!");
+        Debug.Log("FIRE");
+        //print("Firing weapon!");
         weaponStats.bulletsInMag--;
-        print(weaponStats.bulletsInMag);
+        //print(weaponStats.bulletsInMag);
     }
 
     public virtual void StartReloading()

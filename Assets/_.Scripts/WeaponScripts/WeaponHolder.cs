@@ -6,17 +6,14 @@ using UnityEngine.InputSystem;
 public class WeaponHolder : MonoBehaviour
 {
     [Header("WeaponToSpawn"), SerializeField]
-    GameObject weaponToSpawn;
+    public GameObject weaponToSpawn;
 
-    public ThirdPersonShooterController playerController;
+    private ThirdPersonShooterController playerController;
     Animator playerAnimator;
-    public Sprite crosshairImage;
     Weapon equippedWeapon;
 
-    [SerializeField]
-    GameObject weaponSocketLocation;
-    [SerializeField]
-    Transform gripIKSocketLocation;
+    [SerializeField] GameObject weaponSocketLocation;
+    private Transform gripIKSocketLocation;
 
     bool firingPressed = false;
 
@@ -33,8 +30,7 @@ public class WeaponHolder : MonoBehaviour
             weaponToSpawn,
             weaponSocketLocation.transform.position,
             weaponSocketLocation.transform.rotation,
-            weaponSocketLocation.transform
-            );
+            weaponSocketLocation.transform);
 
         equippedWeapon = spawnedWeapon.GetComponent<Weapon>();
         equippedWeapon.Initialize(this);

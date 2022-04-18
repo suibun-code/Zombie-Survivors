@@ -17,7 +17,7 @@ public class StarterAssetsInputs : MonoBehaviour
     public bool jump;
     public bool sprint;
     public bool aim;
-    public bool shoot;
+    public bool fire;
     public bool buildMode;
 
     [Header("Movement Settings")]
@@ -64,9 +64,9 @@ public class StarterAssetsInputs : MonoBehaviour
         AimInput(value.isPressed);
     }
 
-    public void OnShoot(InputValue value)
+    public void OnFire(InputValue value)
     {
-        ShootInput(value.isPressed);
+        FireInput(value.isPressed);
     }
 
     public void OnBuildMode(InputValue value)
@@ -102,9 +102,9 @@ public class StarterAssetsInputs : MonoBehaviour
         aim = newAimState;
     }
 
-    public void ShootInput(bool newShootState)
+    public void FireInput(bool newFireState)
     {
-        shoot = newShootState;
+        fire = newFireState;
     }
 
     public void BuildModeInput()

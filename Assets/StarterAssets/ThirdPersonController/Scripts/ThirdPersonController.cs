@@ -96,6 +96,10 @@ public class ThirdPersonController : MonoBehaviour
     private const float _threshold = 0.01f;
     private bool _hasAnimator;
 
+    public readonly int movementXHash = Animator.StringToHash("MoveX");
+    public readonly int movementYHash = Animator.StringToHash("MoveY");
+    public readonly int verticalAimHash = Animator.StringToHash("VerticalAim");
+
     private void Awake()
     {
         // get a reference to our main camera
@@ -172,11 +176,22 @@ public class ThirdPersonController : MonoBehaviour
         // Cinemachine will follow this target
         _cinemachineTargetYaw += CameraYawOverride;
         CinemachineCameraTarget.transform.rotation = Quaternion.Euler(_cinemachineTargetPitch + CameraAngleOverride, _cinemachineTargetYaw, 0.0f);
+
+        float range = TopClamp - BottomClamp;
+        float offsetToZero = 0 - BottomClamp;
+        float aimAngle = CinemachineCameraTarget.transform.localEulerAngles.x;
+        aimAngle = (aimAngle > 180) ? aimAngle - 360 : aimAngle;
+        float val = (aimAngle + offsetToZero) / range;
+        _animator.SetFloat(verticalAimHash, val);
+
         CameraYawOverride = 0;
     }
 
     private void Move()
     {
+        _animator.SetFloat(movementXHash, _input.move.x);
+        _animator.SetFloat(movementYHash, _input.move.y);
+
         // set target speed based on move speed, sprint speed and if sprint is pressed
         float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
         targetSpeed = _input.aim ? AimSpeed : targetSpeed;
