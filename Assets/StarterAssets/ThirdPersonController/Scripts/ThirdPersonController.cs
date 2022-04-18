@@ -11,16 +11,22 @@ using UnityEngine.InputSystem;
 
 public class ThirdPersonController : MonoBehaviour
 {
+    public static Vector3Int currGridLookAt;
+
     [Header("Player")]
     [Tooltip("Move speed of the character in m/s")]
     public float MoveSpeed = 2.0f;
     [Tooltip("Sprint speed of the character in m/s")]
-    public float SprintSpeed = 5.335f;
+    public float SprintSpeed = 5.0f;
+    [Tooltip("Aim speed of the character in m/s")]
+    public float AimSpeed = 1.25f;
     [Tooltip("How fast the character turns to face movement direction")]
     [Range(0.0f, 0.3f)]
     public float RotationSmoothTime = 0.12f;
     [Tooltip("Acceleration and deceleration")]
     public float SpeedChangeRate = 10.0f;
+
+    public float Sensitivty = 1f;
 
     [Space(10)]
     [Tooltip("The height the player can jump")]
@@ -85,9 +91,9 @@ public class ThirdPersonController : MonoBehaviour
     private CharacterController _controller;
     private StarterAssetsInputs _input;
     private GameObject _mainCamera;
+    private bool _rotateOnMove = true;
 
     private const float _threshold = 0.01f;
-
     private bool _hasAnimator;
 
     private void Awake()
@@ -114,7 +120,7 @@ public class ThirdPersonController : MonoBehaviour
 
     private void Update()
     {
-        _input.SetMiddleOfScreenInWorldPos();
+        currGridLookAt = new Vector3Int(_input.screenMidRaycast.x, _input.screenMidRaycast.y, _input.screenMidRaycast.z);
 
         _hasAnimator = TryGetComponent(out _animator);
 
@@ -126,7 +132,6 @@ public class ThirdPersonController : MonoBehaviour
     private void LateUpdate()
     {
         CameraRotation();
-        //GridHolder.instance.GetNode(_input.screenMiddle.x, _input.screenMiddle.z).cell.SetCellColor(new Color(1.0f, 0.0f, 0.0f, 0.35f));
     }
 
     private void AssignAnimationIDs()
@@ -156,8 +161,8 @@ public class ThirdPersonController : MonoBehaviour
         // if there is an input and camera position is not fixed
         if (_input.look.sqrMagnitude >= _threshold && !LockCameraPosition)
         {
-            _cinemachineTargetYaw += _input.look.x * Time.deltaTime;
-            _cinemachineTargetPitch += _input.look.y * Time.deltaTime;
+            _cinemachineTargetYaw += _input.look.x * Time.deltaTime * Sensitivty;
+            _cinemachineTargetPitch += _input.look.y * Time.deltaTime * Sensitivty;
         }
 
         // clamp our rotations so our values are limited 360 degrees
@@ -174,6 +179,7 @@ public class ThirdPersonController : MonoBehaviour
     {
         // set target speed based on move speed, sprint speed and if sprint is pressed
         float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
+        targetSpeed = _input.aim ? AimSpeed : targetSpeed;
 
         // a simplistic acceleration and deceleration designed to be easy to remove, replace, or iterate upon
 
@@ -214,7 +220,8 @@ public class ThirdPersonController : MonoBehaviour
             float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, _targetRotation, ref _rotationVelocity, RotationSmoothTime);
 
             // rotate to face input direction relative to camera position
-            transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
+            if (_rotateOnMove)
+                transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
         }
 
         Vector3 targetDirection = Quaternion.Euler(0.0f, _targetRotation, 0.0f) * Vector3.forward;
@@ -316,14 +323,25 @@ public class ThirdPersonController : MonoBehaviour
 
         // when selected, draw a gizmo in the position of, and matching radius of, the grounded collider
         Gizmos.DrawSphere(new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z), GroundedRadius);
+
+
     }
 
     public void OnInteract(InputValue value)
     {
         if (value.isPressed)
         {
-            Debug.Log(_input.screenMiddle.x + " | " + _input.screenMiddle.z);
-            ObstacleManager.instance.SpawnObstacle(_input.screenMiddle.x, _input.screenMiddle.z);
+            ObstacleManager.instance.SpawnObstacle(_input.screenMidRaycast.x, _input.screenMidRaycast.z);
         }
+    }
+
+    public void SetSensitivity(float newSens)
+    {
+        Sensitivty = newSens;
+    }
+
+    public void SetRotateOnMove(bool newRotateOnMove)
+    {
+        _rotateOnMove = newRotateOnMove;
     }
 }

@@ -128,8 +128,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f41bff3dcaa737458ec3d130147f119, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tested: 0
-  walkable: 1
+  defaultColor: {r: 0.8235294, g: 0.85490197, b: 0.8862745, a: 0.34901962}
+  nodeHighlightedColor: {r: 0.019607844, g: 0.76862746, b: 0.41960785, a: 0.34901962}
+  nodeObstacleColor: {r: 0.9607843, g: 0.23137255, b: 0.34117648, a: 0.34901962}
 --- !u!1 &4422269028361475341
 GameObject:
   m_ObjectHideFlags: 0
@@ -156,7 +157,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4422269028361475341}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 8511784945839841908}
@@ -164,7 +165,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0.024}
   m_SizeDelta: {x: 0.85, y: 0.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!23 &2001319771723039569
@@ -327,7 +328,7 @@ Transform:
   m_GameObject: {fileID: 7100667640191218063}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.95, y: 0.95, z: 0.95}
+  m_LocalScale: {x: 0.95, y: 0.05, z: 0.95}
   m_Children: []
   m_Father: {fileID: 8511784945839841908}
   m_RootOrder: 0

@@ -8,23 +8,24 @@ public class StarterAssetsInputs : MonoBehaviour
     [SerializeField] Camera mainCam;
 
     [Header("Character Input Values")]
+    public Vector2 mouseWorldPos;
     public Vector2Int mouseWorldPosInt;
     public Vector3Int screenMiddle;
+    public Vector3Int screenMidRaycast;
     public Vector2 move;
     public Vector2 look;
     public bool jump;
     public bool sprint;
+    public bool aim;
+    public bool shoot;
 
     [Header("Movement Settings")]
     public bool analogMovement;
 
-#if !UNITY_IOS || !UNITY_ANDROID
     [Header("Mouse Cursor Settings")]
     public bool cursorLocked = true;
     public bool cursorInputForLook = true;
-#endif
 
-#if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
     public void OnMove(InputValue value)
     {
         MoveInput(value.Get<Vector2>());
@@ -38,13 +39,14 @@ public class StarterAssetsInputs : MonoBehaviour
         }
 
         SetMouseWorldPosInt(value.Get<Vector2>());
+        SetMiddleOfScreenInWorldPos();
+        SetMiddleOfScreenRayCast();
     }
 
     public void OnInteract(InputValue value)
     {
-        //SetMiddleOfScreenInWorldPos();
-    }
 
+    }
 
     public void OnJump(InputValue value)
     {
@@ -55,10 +57,16 @@ public class StarterAssetsInputs : MonoBehaviour
     {
         SprintInput(value.isPressed);
     }
-#else
-	// old input sys if we do decide to have it (most likely wont)...
-#endif
 
+    public void OnAim(InputValue value)
+    {
+        AimInput(value.isPressed);
+    }
+
+    public void OnShoot(InputValue value)
+    {
+        ShootInput(value.isPressed);
+    }
 
     public void MoveInput(Vector2 newMoveDirection)
     {
@@ -80,7 +88,15 @@ public class StarterAssetsInputs : MonoBehaviour
         sprint = newSprintState;
     }
 
-#if !UNITY_IOS || !UNITY_ANDROID
+    public void AimInput(bool newAimState)
+    {
+        aim = newAimState;
+    }
+
+    public void ShootInput(bool newShootState)
+    {
+        shoot = newShootState;
+    }
 
     private void OnApplicationFocus(bool hasFocus)
     {
@@ -92,6 +108,16 @@ public class StarterAssetsInputs : MonoBehaviour
         Cursor.lockState = newState ? CursorLockMode.Locked : CursorLockMode.None;
     }
 
+    public void SetMouseWorldPos()
+    {
+        Vector2 screenCenter = new Vector2(Screen.width / 2f, Screen.height / 2f);
+
+        Ray ray = mainCam.ScreenPointToRay(screenCenter);
+
+        if (Physics.Raycast(ray, out RaycastHit hitInfo, 999f))
+            mouseWorldPos = hitInfo.point;
+    }
+
     private void SetMouseWorldPosInt(Vector2 pos)
     {
         Vector2 temp = mainCam.ScreenToWorldPoint(look);
@@ -100,10 +126,19 @@ public class StarterAssetsInputs : MonoBehaviour
 
     public void SetMiddleOfScreenInWorldPos()
     {
-        Vector3 temp = mainCam.ScreenToWorldPoint(new Vector3((Screen.width / 2), (Screen.height / 2), mainCam.nearClipPlane));
+        Vector3 temp = mainCam.ScreenToWorldPoint(new Vector3(Screen.width / 2, Screen.height / 2, 6f));
         screenMiddle = new Vector3Int((int)temp.x, (int)temp.y, (int)temp.z);
     }
 
-#endif
+    public void SetMiddleOfScreenRayCast()
+    {
+        Ray ray = mainCam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
 
+        if (Physics.Raycast(ray, out RaycastHit hitInfo))
+        {
+            Vector3 temp = hitInfo.point;
+            screenMidRaycast = new Vector3Int((int)temp.x, (int)temp.y, (int)temp.z);
+            Debug.DrawRay(mainCam.transform.position, ray.direction, Color.red, 25f);
+        }
+    }
 }
