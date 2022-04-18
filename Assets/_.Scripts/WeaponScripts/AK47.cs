@@ -6,6 +6,12 @@ public class AK47 : Weapon
 {
     protected override void FireWeapon()
     {
+        if (Pause.gamePaused)
+            return;
+
+        if (weaponHolder.playerController._input.buildMode)
+            return;
+
         Vector3 hitLocation;
 
         if (weaponStats.bulletsInMag > 0 && !isReloading)

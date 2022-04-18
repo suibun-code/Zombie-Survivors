@@ -8,8 +8,8 @@ public class WeaponHolder : MonoBehaviour
     [Header("WeaponToSpawn"), SerializeField]
     public GameObject weaponToSpawn;
 
-    private ThirdPersonShooterController playerController;
-    Animator playerAnimator;
+    public ThirdPersonShooterController playerController;
+    public Animator playerAnimator;
     Weapon equippedWeapon;
 
     [SerializeField] GameObject weaponSocketLocation;
@@ -19,6 +19,8 @@ public class WeaponHolder : MonoBehaviour
 
     public readonly int isFiringHash = Animator.StringToHash("isFiring");
     public readonly int isReloadingHash = Animator.StringToHash("isReloading");
+
+    public AudioSource shootAudio;
 
     // Start is called before the first frame update
     void Start()
@@ -75,7 +77,7 @@ public class WeaponHolder : MonoBehaviour
             return;
         }
 
-        playerAnimator.SetBool(isFiringHash, true);
+        playerAnimator.SetTrigger(isFiringHash);
         playerController.isFiring = true;
         equippedWeapon.StartFiringWeapon();
     }

@@ -22,18 +22,19 @@ public class ThirdPersonShooterController : MonoBehaviour
 
     private Vector3 mouseWorldPosition;
     private ThirdPersonController thirdPersonController;
-    private StarterAssetsInputs _input;
-    private WeaponHolder weaponHolder;
+    public StarterAssetsInputs _input;
 
     private void Awake()
     {
         thirdPersonController = GetComponent<ThirdPersonController>();
         _input = GetComponent<StarterAssetsInputs>();
-        weaponHolder = GetComponent<WeaponHolder>();
     }
 
     private void Update()
     {
+        if (Pause.gamePaused)
+            return;
+
         SetCenterPoint();
 
         if (_input.buildMode)
@@ -65,14 +66,16 @@ public class ThirdPersonShooterController : MonoBehaviour
 
             if (_input.fire)
             {
-                Vector3 muzzle = weaponHolder.weaponToSpawn.GetComponent<Weapon>().muzzleSocket.position + weaponHolder.weaponToSpawn.transform.position + transform.position ;
-                Vector3 aimDir = (mouseWorldPosition - muzzle).normalized;
-                //Debug.Log(aimDir);
-                //Debug.Log(muzzle);
-                Instantiate(bulletTransform, muzzle, Quaternion.LookRotation(aimDir, Vector3.up));
+                //ShootBullet();
                 _input.fire = false;
             }
         }
+    }
+
+    public void ShootBullet()
+    {
+        Vector3 aimDir = (mouseWorldPosition - spawnBulletTransform.position).normalized;
+        Instantiate(bulletTransform, spawnBulletTransform.position, Quaternion.LookRotation(aimDir, Vector3.up));
     }
 
     private void SetCenterPoint()

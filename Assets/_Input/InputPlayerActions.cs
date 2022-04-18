@@ -107,6 +107,15 @@ public partial class @InputPlayerActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": ""Press"",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Pause"",
+                    ""type"": ""Button"",
+                    ""id"": ""edfd0943-ba88-448f-b619-81947ff3eb29"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -384,6 +393,17 @@ public partial class @InputPlayerActions : IInputActionCollection2, IDisposable
                     ""action"": ""Reload"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6c48f19d-87eb-42c2-b2c5-95e42a811109"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardMouse"",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -449,6 +469,7 @@ public partial class @InputPlayerActions : IInputActionCollection2, IDisposable
         m_Player_Fire = m_Player.FindAction("Fire", throwIfNotFound: true);
         m_Player_BuildMode = m_Player.FindAction("BuildMode", throwIfNotFound: true);
         m_Player_Reload = m_Player.FindAction("Reload", throwIfNotFound: true);
+        m_Player_Pause = m_Player.FindAction("Pause", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -517,6 +538,7 @@ public partial class @InputPlayerActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Fire;
     private readonly InputAction m_Player_BuildMode;
     private readonly InputAction m_Player_Reload;
+    private readonly InputAction m_Player_Pause;
     public struct PlayerActions
     {
         private @InputPlayerActions m_Wrapper;
@@ -530,6 +552,7 @@ public partial class @InputPlayerActions : IInputActionCollection2, IDisposable
         public InputAction @Fire => m_Wrapper.m_Player_Fire;
         public InputAction @BuildMode => m_Wrapper.m_Player_BuildMode;
         public InputAction @Reload => m_Wrapper.m_Player_Reload;
+        public InputAction @Pause => m_Wrapper.m_Player_Pause;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -566,6 +589,9 @@ public partial class @InputPlayerActions : IInputActionCollection2, IDisposable
                 @Reload.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnReload;
                 @Reload.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnReload;
                 @Reload.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnReload;
+                @Pause.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPause;
+                @Pause.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPause;
+                @Pause.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPause;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -597,6 +623,9 @@ public partial class @InputPlayerActions : IInputActionCollection2, IDisposable
                 @Reload.started += instance.OnReload;
                 @Reload.performed += instance.OnReload;
                 @Reload.canceled += instance.OnReload;
+                @Pause.started += instance.OnPause;
+                @Pause.performed += instance.OnPause;
+                @Pause.canceled += instance.OnPause;
             }
         }
     }
@@ -648,5 +677,6 @@ public partial class @InputPlayerActions : IInputActionCollection2, IDisposable
         void OnFire(InputAction.CallbackContext context);
         void OnBuildMode(InputAction.CallbackContext context);
         void OnReload(InputAction.CallbackContext context);
+        void OnPause(InputAction.CallbackContext context);
     }
 }

@@ -19,6 +19,12 @@ public class BulletProjectile : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (other.tag == "Enemy")
+        {
+            other.GetComponent<Zombie>().SubtractHealth(20);
+            Debug.Log("HIT ZOMBIE");
+        }
+
         Destroy(gameObject);
     }
 }

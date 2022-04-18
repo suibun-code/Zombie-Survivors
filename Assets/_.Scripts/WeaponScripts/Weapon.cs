@@ -76,8 +76,8 @@ public class Weapon : MonoBehaviour
     {
         isFiring = false;
         CancelInvoke(nameof(FireWeapon));
-        
-        if(firingEffect && firingEffect.isPlaying)
+
+        if (firingEffect && firingEffect.isPlaying)
         {
             firingEffect.Stop();
         }
@@ -85,10 +85,17 @@ public class Weapon : MonoBehaviour
 
     protected virtual void FireWeapon()
     {
-        Debug.Log("FIRE");
-        //print("Firing weapon!");
+        if (Pause.gamePaused)
+            return;
+
+        if (weaponHolder.playerController._input.buildMode)
+            return;
+
+        weaponHolder.playerController.ShootBullet();
         weaponStats.bulletsInMag--;
-        //print(weaponStats.bulletsInMag);
+        weaponHolder.shootAudio.Play();
+        int isFiringHash = Animator.StringToHash("isFiring");
+        weaponHolder.playerAnimator.SetTrigger(isFiringHash);
     }
 
     public virtual void StartReloading()

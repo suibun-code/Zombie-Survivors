@@ -124,6 +124,9 @@ public class ThirdPersonController : MonoBehaviour
 
     private void Update()
     {
+        if (Pause.gamePaused)
+            return;
+
         currGridLookAt = new Vector3Int(_input.screenMidRaycast.x, _input.screenMidRaycast.y, _input.screenMidRaycast.z);
 
         _hasAnimator = TryGetComponent(out _animator);

@@ -5,6 +5,13 @@ using UnityEngine;
 public static class PlayerStats
 {
     public static int Money { get; set; } = 100;
+    public static int Score { get; set; } = 0;
+
+    public static void AddScore(int score)
+    {
+        Score += score;
+        IngameUI.instance.SetScoreText();
+    }
 
     public static void AddMoney(int money)
     {
