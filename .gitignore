@@ -11,7 +11,6 @@
 /[Mm]emoryCaptures/
 /Assets/_Art/Animations
 /Assets/_Art/Models
-/Assets/_Art/Textures
 
 # Asset meta data should only be ignored when the corresponding asset is also ignored
 !/[Aa]ssets/**/*.meta
